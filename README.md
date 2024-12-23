@@ -1,7 +1,7 @@
 # About the project
 
 ### Environments
-This environment built base on the examples that are shown [on the environment creation documentation](https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/).
+This environment built base on the `gymnasium` environment. Examples are shown [on the environment creation documentation](https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/). The modified environment include:
 - `MTSPEnv(num_agents,num_tasks,map_boundary)`: Multiple Traveling salesman Problem
 
 ### Deep-Q Network

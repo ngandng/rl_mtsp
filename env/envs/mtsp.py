@@ -6,13 +6,6 @@ import pygame
 
 from stable_baselines3.common.env_checker import check_env
 
-# class Actions(Enum):
-#     right = 0
-#     up = 1
-#     left = 2
-#     down = 3
-
-
 class MTSPEnv(gym.Env):
     metadata = {"render_modes": ["human"], "render_fps": 4}
 
