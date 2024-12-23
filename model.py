@@ -114,7 +114,8 @@ class Agent():
         q_pred = self.policy_net.forward(state_batch)[batch_index, action_batch]    # only need the value of actions we actually took
         
         # calculate target Q value
-        q_next = self.target_net.forward(new_state_batch)
+        # q_next = self.target_net.forward(new_state_batch)
+        q_next = self.policy_net.forward(new_state_batch)
         q_next[terminal_batch] = 0.0                                            # the value of terminal states are 0
         q_target = reward_batch + self.gamma * T.max(q_next, dim=1)[0]          # the max function return (value, index)
 

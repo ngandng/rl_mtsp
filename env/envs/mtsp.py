@@ -7,7 +7,7 @@ import pygame
 from stable_baselines3.common.env_checker import check_env
 
 class MTSPEnv(gym.Env):
-    metadata = {"render_modes": ["human"], "render_fps": 4}
+    metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
     def __init__(self, num_agents=2, num_tasks=5, boundary=50, render_mode=None):
         self.num_agents = num_agents
@@ -30,6 +30,21 @@ class MTSPEnv(gym.Env):
         # Action is a tupe [agent_index, next_task]
         # Flatten action space: single integer to represent [agent, task_idx] pair
         self.action_space = spaces.Discrete(self.num_agents * self.num_tasks)
+
+        # Rendering
+        assert render_mode is None or render_mode in self.metadata["render_modes"]
+        self.render_mode = render_mode
+
+        """
+        If human-rendering is used, `self.window` will be a reference
+        to the window that we draw to. `self.clock` will be a clock that is used
+        to ensure that the environment is rendered at the correct framerate in
+        human-mode. They will remain `None` until human-mode is used for the
+        first time.
+        """
+        self.window = None
+        self.clock = None
+
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)

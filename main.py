@@ -12,12 +12,13 @@ if __name__ == '__main__':
                   epsilon=1.0, batch_size=64, n_actions=env.action_space.n,
                   eps_end=0.01, lr=0.003, T=1000)
     scores, eps_history = [], []
-    n_games = 1000
+    n_games = 500
+    random_seed = 8
 
     for i in range(n_games):
         score = 0
         done = False
-        observation, info = env.reset()
+        observation, info = env.reset(seed=random_seed)
 
         while not done:
             action = agent.choose_action(observation)
