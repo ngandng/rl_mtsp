@@ -50,7 +50,8 @@ class MTSPEnv(gym.Env):
         super().reset(seed=seed)
 
         # Initialize all agents at zero positions
-        self.agent_positions = np.zeros((self.num_agents, 2))
+        self.depot = np.zeros((2))
+        self.agent_routes = np.zeros((self.num_agents, 2))
 
         # Initialize tasks at random positions
         self.task_positions = self.np_random.integers(0, self.boundary, size=(self.num_tasks, 2))
@@ -71,12 +72,18 @@ class MTSPEnv(gym.Env):
 
         if self.tasks_remaining[task_idx]:  # If the task is not completed
             distance = np.linalg.norm(self.agent_positions[agent]-self.task_positions[task_idx])
-            reward = 100/distance  # Reward for completing a task
+            reward = self.boundary/distance  # Reward for completing a task
             self.tasks_remaining[task_idx] = 0  # Mark task as completed
-            self.agent_positions[agent] = self.task_positions[task_idx] # update position for agent
+            np.append(self.agent_routes[agent],self.task_positions[task_idx]) # append position for agent
 
         # Terminate if all tasks are completed
         terminated = bool(np.sum(self.tasks_remaining) == 0)
+
+        # add the cost of agent go back to depot
+        if terminated:
+            for agent_position in self.agent_positions:
+                distance = np.linalg.norm(agent_position-self.depot)
+                reward += self.boundary/distance
 
         if self.render_mode == "human":
             self._render_frame()
@@ -121,13 +128,25 @@ class MTSPEnv(gym.Env):
                 ),
             )
         # Now we draw the agent
-        for agent in self.agent_positions:
-            pygame.draw.circle(
-                canvas,
-                (0, 0, 255),
-                (agent + 0.5) * pix_square_size,
-                pix_square_size / 3,
-            )
+        for agent_route in self.agent_routes:
+            # Draw lines connecting consecutive positions
+            for i in range(len(agent_route) - 1):
+                pygame.draw.line(
+                    canvas,
+                    (0, 0, 255),  # Line color (blue)
+                    (agent_route[i] + 0.5) * pix_square_size,  # Start position
+                    (agent_route[i + 1] + 0.5) * pix_square_size,  # End position
+                    width=3  # Line width
+                )
+            
+            # Draw a circle at the current position
+            if agent_route:  # Ensure the route is not empty
+                pygame.draw.circle(
+                    canvas,
+                    (255, 0, 0),  # Circle color (red)
+                    (agent_route[-1] + 0.5) * pix_square_size,  # Latest position
+                    pix_square_size / 3,  # Circle radius
+                )
 
         if self.render_mode == "human":
             # The following line copies our drawings from `canvas` to the visible window
