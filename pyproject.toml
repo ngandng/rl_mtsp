@@ -12,6 +12,7 @@ dependencies = [
   "gymnasium",
   "pygame>=2.1.3",
   "pre-commit",
+  "torch",
 ]
 authors = [
   {name = "Thi Thuy Ngan Duong"},
