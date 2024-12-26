@@ -31,7 +31,7 @@ class DeepQNetwork(nn.Module):
 
         return actions
     
-class Agent():
+class DQNAgent():
     def __init__(self, gamma, epsilon, lr, input_dims, batch_size, n_actions,
                  max_mem_size = 100000, eps_end = 0.01, eps_dec = 5e-5, T = 1000):
         
@@ -82,6 +82,12 @@ class Agent():
         else:
             action = np.random.choice(self.action_space)
 
+        return action
+    
+    def extract_greedy_action(self, observation):
+        state = T.tensor(np.array([observation])).to(self.policy_net.device)  # send the observation tensor to device
+        actions = self.policy_net.forward(state=state)
+        action = T.argmax(actions).item()
         return action
     
     def update_target_net(self):

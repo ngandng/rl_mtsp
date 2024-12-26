@@ -57,6 +57,11 @@ class MTSPEnv(gym.Env):
         self.task_positions = self.np_random.integers(0, self.boundary, size=(self.num_tasks, 2))
         self.tasks_remaining = np.ones(self.num_tasks, dtype=np.int8)
 
+        # Initialize agent routes
+        self.agent_routes = [[] for _ in range(self.num_agents)]
+        for i in range(self.num_agents):
+            self.agent_routes[i].append(self.agent_positions[i].copy())
+
         if self.render_mode == "human":
             self._render_frame()
 
@@ -75,15 +80,21 @@ class MTSPEnv(gym.Env):
             reward = self.boundary/distance  # Reward for completing a task
             self.tasks_remaining[task_idx] = 0  # Mark task as completed
             self.agent_positions[agent] = self.task_positions[task_idx] # update position for agent
+            self.agent_routes[agent].append(self.agent_positions[agent].copy())    # save route information
 
         # Terminate if all tasks are completed
         terminated = bool(np.sum(self.tasks_remaining) == 0)
 
         # add the cost of agent go back to depot
         if terminated:
-            for agent_position in self.agent_positions:
-                distance = np.linalg.norm(agent_position-self.depot)
-                reward += self.boundary/distance
+            # reward will calculate with the returning distance
+            for i in range(len(self.agent_positions)):
+                distance = np.linalg.norm(self.agent_positions[i]-self.depot)
+                if distance > 0:
+                    reward += self.boundary/distance
+                # agent go back to depot
+                self.agent_positions[i] = np.zeros((2))
+                self.agent_routes[i].append(self.agent_positions[i].copy())
 
         if self.render_mode == "human":
             self._render_frame()
@@ -128,22 +139,31 @@ class MTSPEnv(gym.Env):
                 ),
             )
         # Now we draw the agent
-        for agent in self.agent_positions:
-            pygame.draw.circle(
-                canvas,
-                (0, 0, 255),
-                (agent + 0.5) * pix_square_size,
-                pix_square_size / 3,
-            )
+        # Define colors for routes
+        colors = [
+            (0, 255, 0),  # Green
+            (0, 0, 255),  # Blue
+            (255, 0, 255),  # Magenta
+            (0, 255, 255),  # Cyan
+            (255, 255, 0),  # Yellow
+        ]
+
+        # Draw agent routes
+        for idx, route in enumerate(self.agent_routes):
+            color = colors[idx % len(colors)]  # Cycle through colors if agents > colors
+            for i in range(len(route) - 1):
+                start = (int(route[i][0] * pix_square_size + pix_square_size // 2),
+                        int(route[i][1] * pix_square_size + pix_square_size // 2))
+                end = (int(route[i + 1][0] * pix_square_size + pix_square_size // 2),
+                    int(route[i + 1][1] * pix_square_size + pix_square_size // 2))
+
+                pygame.draw.line(canvas, color, start, end, 2)
 
         if self.render_mode == "human":
-            # The following line copies our drawings from `canvas` to the visible window
+            # Copy canvas to the visible window
             self.window.blit(canvas, canvas.get_rect())
             pygame.event.pump()
-            pygame.display.update()
-
-            # We need to ensure that human-rendering occurs at the predefined framerate.
-            # The following line will automatically add a delay to keep the framerate stable.
+            pygame.display.flip()
             self.clock.tick(self.metadata["render_fps"])
         else:  # rgb_array
             return np.transpose(

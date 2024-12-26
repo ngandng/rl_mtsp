@@ -17,6 +17,10 @@ def plot_learning_curve(x, scores, epsilons, filename, lines=None):
     for t in range(N):
         running_avg[t] = np.mean(scores[max(0, t-20):(t+1)])
 
+    # Adjust x to match the length of running_avg if necessary
+    if len(x) > len(running_avg):
+        x = x[-len(running_avg):]
+
     ax2.scatter(x, running_avg, color="C1")
     ax2.axes.get_xaxis().set_visible(False)
     ax2.yaxis.tick_right()
