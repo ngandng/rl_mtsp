@@ -23,7 +23,7 @@ if __name__ == '__main__':
                   epsilon=1.0, batch_size=64, n_actions=env.action_space.n,
                   eps_end=0.01, lr=0.003, T=1000)
     scores, eps_history = [], []
-    n_games = 700
+    n_games = 1500
     random_seed = 8
 
     for i in range(n_games):

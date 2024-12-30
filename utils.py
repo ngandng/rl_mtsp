@@ -12,19 +12,26 @@ def plot_learning_curve(x, scores, epsilons, filename, lines=None):
     ax.tick_params(axis='x', colors="C0")
     ax.tick_params(axis='y', colors="C0")
 
-    N = len(scores)
-    running_avg = np.empty(N)
-    for t in range(N):
-        running_avg[t] = np.mean(scores[max(0, t-20):(t+1)])
+    # N = len(scores)
+    # running_avg = np.empty(N)
+    # for t in range(N):
+    #     running_avg[t] = np.mean(scores[max(0, t-20):(t+1)])
 
-    # Adjust x to match the length of running_avg if necessary
-    if len(x) > len(running_avg):
-        x = x[-len(running_avg):]
+    # # Adjust x to match the length of running_avg if necessary
+    # if len(x) > len(running_avg):
+    #     x = x[-len(running_avg):]
 
-    ax2.scatter(x, running_avg, color="C1")
+    # ax2.scatter(x, running_avg, color="C1")
+    # ax2.axes.get_xaxis().set_visible(False)
+    # ax2.yaxis.tick_right()
+    # ax2.set_ylabel('Score', color="C1")
+    # ax2.yaxis.set_label_position('right')
+    # ax2.tick_params(axis='y', colors="C1")
+
+    ax2.plot(x, scores, color="C1")
     ax2.axes.get_xaxis().set_visible(False)
-    ax2.yaxis.tick_right()
-    ax2.set_ylabel('Score', color="C1")
+    ax2.yaxis.tick_right()  # Move the y-axis to the right
+    ax2.set_ylabel("Scores", color="C1")
     ax2.yaxis.set_label_position('right')
     ax2.tick_params(axis='y', colors="C1")
 

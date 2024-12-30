@@ -1,3 +1,5 @@
+import os
+
 import torch as T
 import torch.nn as nn
 import torch.nn.functional as F
@@ -56,7 +58,7 @@ class DQNAgent():
                                    fc2_dims=256, n_actions=n_actions)                       # note: target network has to be defined with same parameters as policy network
         self.target_net.load_state_dict(self.policy_net.state_dict())
 
-        # storing memory
+        # storing memory to experience relay
         self.state_memory = np.zeros((self.mem_size, *input_dims), dtype=np.float32)
         self.new_state_memory = np.zeros((self.mem_size, *input_dims), dtype=np.float32)    # keep track of new state the agent accounted
         self.action_memory = np.zeros(self.mem_size, dtype=np.int32)
@@ -136,4 +138,68 @@ class DQNAgent():
         self.target_update_cntr += 1
         self.update_target_net()
         
+    def save(self, path):
+        """
+        Save the DQNAgent's state and models.
 
+        :param path: The directory where the agent should be saved.
+        """
+        os.makedirs(path, exist_ok=True)
+
+        # Save models
+        T.save(self.policy_net.state_dict(), os.path.join(path, 'policy_net.pth'))
+        T.save(self.target_net.state_dict(), os.path.join(path, 'target_net.pth'))
+
+        # Save other attributes
+        agent_state = {
+            'gamma': self.gamma,
+            'epsilon': self.epsilon,
+            'eps_min': self.eps_min,
+            'eps_dec': self.eps_dec,
+            'lr': self.lr,
+            'action_space': self.action_space,
+            'mem_size': self.mem_size,
+            'batch_size': self.batch_size,
+            'mem_cntr': self.mem_cntr,
+            'target_update_cntr': self.target_update_cntr,
+            'T': self.T,
+            'state_memory': self.state_memory,
+            'new_state_memory': self.new_state_memory,
+            'action_memory': self.action_memory,
+            'reward_memory': self.reward_memory,
+            'termial_memory': self.termial_memory,
+        }
+
+        T.save(agent_state, os.path.join(path, 'agent_state.pth'))
+
+def load(self, path):
+    """
+    Load the DQNAgent's state and models from the specified directory.
+
+    :param path: The directory where the agent's files are stored.
+    """
+    # Load models
+    self.policy_net.load_state_dict(T.load(os.path.join(path, 'policy_net.pth')))
+    self.target_net.load_state_dict(T.load(os.path.join(path, 'target_net.pth')))
+
+    # Load other attributes
+    agent_state = T.load(os.path.join(path, 'agent_state.pth'))
+    
+    self.gamma = agent_state['gamma']
+    self.epsilon = agent_state['epsilon']
+    self.eps_min = agent_state['eps_min']
+    self.eps_dec = agent_state['eps_dec']
+    self.lr = agent_state['lr']
+    self.action_space = agent_state['action_space']
+    self.mem_size = agent_state['mem_size']
+    self.batch_size = agent_state['batch_size']
+    self.mem_cntr = agent_state['mem_cntr']
+    self.target_update_cntr = agent_state['target_update_cntr']
+    self.T = agent_state['T']
+
+    # Replay memory
+    self.state_memory = agent_state['state_memory']
+    self.new_state_memory = agent_state['new_state_memory']
+    self.action_memory = agent_state['action_memory']
+    self.reward_memory = agent_state['reward_memory']
+    self.termial_memory = agent_state['termial_memory']
