@@ -5,7 +5,7 @@ This environment built base on the `gymnasium` environment. Examples are shown [
 - `MTSPEnv(num_agents,num_tasks,map_boundary)`: Multiple Traveling salesman Problem
   - State: is a concatenated vector of agent position and a binary vector of remaining tasks
   - Action space: $a_{ij} = i*(\text{task number})+j$ means assign task $i$ for agent $j$
-  - Transition probabilities: this is a deterministic environment, so $P(s'|s,a) = \{1, \quad \text{if} \, s'=f(s,a) \text{and} \, 0, \text{otherwise} \}$
+  - Transition probabilities: this is a deterministic environment, so $P({s}'|s,a) = \{1, 0\}$
 
 ## Models 
 - Deep-Q Network
