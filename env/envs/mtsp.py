@@ -55,7 +55,7 @@ class MTSPEnv(gym.Env):
 
         # Initialize tasks at random positions
         self.task_positions = self.np_random.integers(0, self.boundary, size=(self.num_tasks, 2))
-        self.tasks_remaining = np.ones(self.num_tasks, dtype=np.int8)
+        self.tasks_remaining = np.ones(self.num_tasks, dtype=np.int8)   # 1 means task is available
 
         # Initialize agent routes
         self.agent_routes = [[] for _ in range(self.num_agents)]
