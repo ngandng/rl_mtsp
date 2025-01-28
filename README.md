@@ -16,24 +16,19 @@ This environment models the **Multiple Traveling Salesman Problem (MTSP)**. Belo
 
 #### **Action Space**  
 - An action is defined as:  
-  \[
-  a_{ij} = i \cdot (\text{task number}) + j
-  \]  
-  where:
-  - \(i\): Task index  
-  - \(j\): Agent index  
+  `a_ij = i * (task number) + j`  
+  where:  
+  - `i` is the task index.  
+  - `j` is the agent index.  
 
-  This action assigns **Task \(i\)** to **Agent \(j\)**.
+  This action assigns **Task `i`** to **Agent `j`**.
 
 #### **Transition Probabilities**  
 - This is a **deterministic environment**, so the transition probabilities are:  
-  \[
-  P(s' \mid s, a) = 
-  \begin{cases} 
-  1 & \text{if the transition is valid} \\
-  0 & \text{otherwise}
-  \end{cases}
-  \]
+  ```
+  P(s' | s, a) = 1, if the transition is valid (task is available)
+  P(s' | s, a) = 0, otherwise
+  ```
 
 #### **Reward**  
 - The reward is **inversely proportional** to the travel distance.
