@@ -1,11 +1,42 @@
 # MTSP with Reinforcement Learning Approaches
 
 ## Environments
-This environment built base on the `gymnasium` environment. Examples are shown [on the environment creation documentation](https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/). The modified environment include:
-- `MTSPEnv(num_agents,num_tasks,map_boundary)`: Multiple Traveling salesman Problem
-  - State: is a concatenated vector of agent position and a binary vector of remaining tasks
-  - Action space: $a_{ij} = i*(\text{task number})+j$ means assign task $i$ for agent $j$
-  - Transition probabilities: this is a deterministic environment, so $P({s}'|s,a) = \{1, 0\}$
+
+This environment is built based on the [`gymnasium`](https://gymnasium.farama.org/) framework. You can refer to the [environment creation documentation](https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/) for examples. 
+
+The modified environment includes:
+
+### **`MTSPEnv(num_agents, num_tasks, map_boundary)`**  
+This environment models the **Multiple Traveling Salesman Problem (MTSP)**. Below are its key characteristics:
+
+#### **State Space**  
+- The state is represented as a concatenated vector of:
+  1. **Agent Positions**  
+  2. **Binary Vector of Remaining Tasks**
+
+#### **Action Space**  
+- An action is defined as:  
+  \[
+  a_{ij} = i \cdot (\text{task number}) + j
+  \]  
+  where:
+  - \(i\): Task index  
+  - \(j\): Agent index  
+
+  This action assigns **Task \(i\)** to **Agent \(j\)**.
+
+#### **Transition Probabilities**  
+- This is a **deterministic environment**, so the transition probabilities are:  
+  \[
+  P(s' \mid s, a) = 
+  \begin{cases} 
+  1 & \text{if the transition is valid} \\
+  0 & \text{otherwise}
+  \end{cases}
+  \]
+
+#### **Reward**  
+- The reward is **inversely proportional** to the travel distance.
 
 ## Models 
 - Deep-Q Network
