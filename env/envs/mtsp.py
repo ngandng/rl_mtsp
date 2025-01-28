@@ -77,10 +77,11 @@ class MTSPEnv(gym.Env):
 
         if self.tasks_remaining[task_idx]:  # If the task is not completed
             distance = np.linalg.norm(self.agent_positions[agent]-self.task_positions[task_idx])
-            reward = self.boundary/distance  # Reward for completing a task
-            self.tasks_remaining[task_idx] = 0  # Mark task as completed
-            self.agent_positions[agent] = self.task_positions[task_idx] # update position for agent
-            self.agent_routes[agent].append(self.agent_positions[agent].copy())    # save route information
+            if distance > 1e-5:
+                reward = self.boundary/distance  # Reward for completing a task
+                self.tasks_remaining[task_idx] = 0  # Mark task as completed
+                self.agent_positions[agent] = self.task_positions[task_idx] # update position for agent
+                self.agent_routes[agent].append(self.agent_positions[agent].copy())    # save route information
 
         # Terminate if all tasks are completed
         terminated = bool(np.sum(self.tasks_remaining) == 0)

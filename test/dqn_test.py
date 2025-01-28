@@ -41,4 +41,4 @@ if __name__ == '__main__':
     print('Final solution ','score %.2f' % score)
 
     rgb_array = env.render()
-    plt.imsave("dqn_final_sol.png", rgb_array)
+    plt.imsave("data/img/dqn_solution.png", rgb_array)
