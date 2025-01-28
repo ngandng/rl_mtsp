@@ -6,13 +6,13 @@ This environment is built based on the [`gymnasium`](https://gymnasium.farama.or
 
 The modified environment includes:
 
-### **`MTSPEnv(num_agents, num_tasks, map_boundary)`**  
-This environment models the **Multiple Traveling Salesman Problem (MTSP)**. Below are its key characteristics:
+**`MTSPEnv(num_agents, num_tasks, map_boundary)`**  
+This environment models the Multiple Traveling Salesman Problem (MTSP). Below are its key characteristics:
 
 #### **State Space**  
 - The state is represented as a concatenated vector of:
-  1. **Agent Positions**  
-  2. **Binary Vector of Remaining Tasks**
+  1. Agent Positions
+  2. Binary Vector of Remaining Tasks
 
 #### **Action Space**  
 - An action is defined as:  
@@ -21,17 +21,17 @@ This environment models the **Multiple Traveling Salesman Problem (MTSP)**. Belo
   - `i` is the task index.  
   - `j` is the agent index.  
 
-  This action assigns **Task `i`** to **Agent `j`**.
+  This action assigns Task `i` to Agent `j`.
 
 #### **Transition Probabilities**  
-- This is a **deterministic environment**, so the transition probabilities are:  
+- This is a deterministic environment, so the transition probabilities are:  
   ```
   P(s' | s, a) = 1, if the transition is valid (task is available)
   P(s' | s, a) = 0, otherwise
   ```
 
 #### **Reward**  
-- The reward is **inversely proportional** to the travel distance.
+- The reward is inversely proportional to the travel distance.
 
 ## Models 
 - Deep-Q Network
@@ -54,7 +54,7 @@ The following plot visualizes the final solution obtained using
 </p>
 
 ## Using the code
-Running the test of current training values
+Running the test of my current training result
 
 `python3 -m test.'algorithm'_test`
 
